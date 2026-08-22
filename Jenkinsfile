@@ -39,5 +39,22 @@ pipeline {
                 }
             }
         }
+                stage('Deploy to EC2') {
+            steps {
+                sh '''
+                    docker pull $DOCKER_IMAGE:latest
+
+                    docker stop ecommerce-app || true
+                    docker rm ecommerce-app || true
+
+                    docker run -d \
+                        --name ecommerce-app \
+                        -p 5000:5000 \
+                        $DOCKER_IMAGE:latest
+
+                    docker ps
+                '''
+            }
+        }
     }
 }
