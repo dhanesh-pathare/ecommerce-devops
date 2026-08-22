@@ -12,7 +12,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ecommerce-devops:latest .'
+                sh 'docker build -t ecommerce-devops:build-${BUILD_NUMBER} .'
+                sh 'docker tag ecommerce-devops:build-${BUILD_NUMBER} ecommerce-devops:latest'
             }
         }
 
@@ -25,7 +26,7 @@ pipeline {
 
         stage('Run New Container') {
             steps {
-                sh 'docker run -d --name ecommerce-app -p 5000:5000 ecommerce-devops:latest'
+                sh 'docker run -d --name ecommerce-app -p 5000:5000 ecommerce-devops:build-${BUILD_NUMBER}'
             }
         }
 
